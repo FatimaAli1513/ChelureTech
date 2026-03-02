@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -36,6 +37,8 @@ const TabBarIcon: React.FC<TabBarIconProps> = ({ focused, name, colors }) => {
 
 export const TabNavigator: React.FC = () => {
   const { colors } = useTheme();
+  const insets = useSafeAreaInsets();
+  const bottomPadding = insets.bottom + 34;
   return (
     <Tab.Navigator
       screenOptions={{
@@ -45,6 +48,8 @@ export const TabNavigator: React.FC = () => {
           {
             backgroundColor: colors.backgroundCard,
             borderTopColor: colors.borderColor,
+            paddingBottom: bottomPadding,
+            height: 56 + bottomPadding,
           },
         ],
         tabBarActiveTintColor: colors.accent,
@@ -100,9 +105,7 @@ const styles = StyleSheet.create({
   tabBar: {
     position: 'absolute',
     borderTopWidth: 1,
-    height: 80,
     paddingTop: 8,
-    paddingBottom: 24,
     paddingHorizontal: 16,
   },
   tabBarLabel: {

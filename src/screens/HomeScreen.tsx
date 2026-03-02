@@ -244,7 +244,6 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: FONTS.sizes.lg,
     fontWeight: FONTS.weights.semiBold,
-    color: COLORS.text,
   },
   connectionInfo: {
     alignItems: 'center',
