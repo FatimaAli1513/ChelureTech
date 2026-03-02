@@ -2708,6 +2708,7 @@ __metadata:
     "@react-navigation/native": "npm:^7.1.31"
     "@types/react": "npm:~19.2.2"
     expo: "npm:~55.0.4"
+    expo-clipboard: "npm:~55.0.8"
     expo-device: "npm:~55.0.9"
     expo-linear-gradient: "npm:~55.0.8"
     expo-network: "npm:~55.0.8"
@@ -3163,6 +3164,17 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/c84ec0b39b0b1d7e9629f3ad9dba6b652c4a63e58dddda7524d65728ca41b6d8f3b36766aefea4b90d3c581ea9dd9357decff8f4c4d8c398c5e5ac63a5e24ea5
+  languageName: node
+  linkType: hard
+
+"expo-clipboard@npm:~55.0.8":
+  version: 55.0.8
+  resolution: "expo-clipboard@npm:55.0.8"
+  peerDependencies:
+    expo: "*"
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/5a4cd8f32176a45a4954b300e45de5d9d1c0a78bb20bc08dedd3bd6adcf0f2659bab9e7b70d9bf428cb7271e3f091731dda9b9bc347ff46dc7e6e003c341c67d
   languageName: node
   linkType: hard
 

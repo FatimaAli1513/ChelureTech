@@ -13,6 +13,7 @@
     "@react-navigation/bottom-tabs": "^7.15.2",
     "@react-navigation/native": "^7.1.31",
     "expo": "~55.0.4",
+    "expo-clipboard": "~55.0.8",
     "expo-device": "~55.0.9",
     "expo-linear-gradient": "~55.0.8",
     "expo-network": "~55.0.8",

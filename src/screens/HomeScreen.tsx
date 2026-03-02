@@ -8,9 +8,12 @@ import {
   Animated,
   TouchableOpacity,
   Dimensions,
+  Share,
+  Alert,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import * as Clipboard from 'expo-clipboard';
 import * as Network from 'expo-network';
 import { GradientCard, StatusIndicator } from '../components';
 import { useTheme } from '../context/ThemeContext';
@@ -32,6 +35,7 @@ export const HomeScreen: React.FC = () => {
     isInternetReachable: false,
   });
   const [ipAddress, setIpAddress] = useState<string>('---.---.---.---');
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
 
@@ -53,6 +57,7 @@ export const HomeScreen: React.FC = () => {
   }, []);
 
   const fetchNetworkInfo = async () => {
+    setIsRefreshing(true);
     try {
       const state = await Network.getNetworkStateAsync();
       setNetworkState({
@@ -65,6 +70,8 @@ export const HomeScreen: React.FC = () => {
       setIpAddress(ip);
     } catch (error) {
       console.log('Error fetching network info:', error);
+    } finally {
+      setIsRefreshing(false);
     }
   };
 
@@ -81,10 +88,34 @@ export const HomeScreen: React.FC = () => {
     return types[type] || type;
   };
 
+  const handleShare = async () => {
+    try {
+      await Share.share({
+        message: `My IP Address: ${ipAddress}\nConnection: ${getConnectionTypeName(networkState.type)}`,
+        title: 'Network Info - ChelureTech',
+      });
+    } catch {
+      // User cancelled or share failed - no need to show error for cancel
+    }
+  };
+
+  const handleCopy = async () => {
+    try {
+      await Clipboard.setStringAsync(ipAddress);
+      Alert.alert('Copied!', 'IP address copied to clipboard');
+    } catch {
+      Alert.alert('Error', 'Unable to copy to clipboard');
+    }
+  };
+
   const quickActions = [
-    { icon: 'refresh-outline' as const, label: 'Refresh', onPress: fetchNetworkInfo },
-    { icon: 'share-outline' as const, label: 'Share IP', onPress: () => {} },
-    { icon: 'copy-outline' as const, label: 'Copy', onPress: () => {} },
+    {
+      icon: (isRefreshing ? 'refresh' : 'refresh-outline') as keyof typeof Ionicons.glyphMap,
+      label: isRefreshing ? 'Refreshing...' : 'Refresh',
+      onPress: fetchNetworkInfo,
+    },
+    { icon: 'share-outline' as const, label: 'Share IP', onPress: handleShare },
+    { icon: 'copy-outline' as const, label: 'Copy', onPress: handleCopy },
   ];
 
   return (
@@ -152,6 +183,7 @@ export const HomeScreen: React.FC = () => {
                   key={index}
                   style={styles.quickActionBtn}
                   onPress={action.onPress}
+                  disabled={index === 0 && isRefreshing}
                   activeOpacity={0.7}
                   accessibilityLabel={action.label}
                   accessibilityRole="button"
