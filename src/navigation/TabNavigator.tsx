@@ -111,15 +111,15 @@ const styles = StyleSheet.create({
   tabBarLabel: {
     fontSize: FONTS.sizes.xs,
     fontWeight: FONTS.weights.medium,
-    marginTop: 4,
+    marginTop: 8,
   },
   activeIconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
   },
   activeIconGradient: {
-    width: 44,
-    height: 44,
+    width: 35,
+    height: 35,
     borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
