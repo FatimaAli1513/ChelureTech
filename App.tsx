@@ -1,20 +1,27 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { TabNavigator } from './src/navigation';
+import { ThemeProvider, useTheme } from './src/context/ThemeContext';
 
-export default function App() {
+const AppContent: React.FC = () => {
+  const { isDarkMode } = useTheme();
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <>
+      <StatusBar style={isDarkMode ? 'light' : 'dark'} />
+      <TabNavigator />
+    </>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const App: React.FC = () => {
+  return (
+    <ThemeProvider>
+      <NavigationContainer>
+        <AppContent />
+      </NavigationContainer>
+    </ThemeProvider>
+  );
+};
+
+export default App;
