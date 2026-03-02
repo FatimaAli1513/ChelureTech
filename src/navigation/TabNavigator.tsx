@@ -38,7 +38,7 @@ const TabBarIcon: React.FC<TabBarIconProps> = ({ focused, name, colors }) => {
 export const TabNavigator: React.FC = () => {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
-  const bottomPadding = insets.bottom + 34;
+  const bottomPadding = insets.bottom + 24;
   return (
     <Tab.Navigator
       screenOptions={{

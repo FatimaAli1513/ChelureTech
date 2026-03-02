@@ -1,10 +1,8 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 import { DARK_COLORS, LIGHT_COLORS, type ColorScheme } from '../constants/theme';
 
-const THEME_STORAGE_KEY = '@cheluretech_theme';
-
-type ThemeMode = 'dark' | 'light';
+const THEME_STORAGE_KEY = 'cheluretech_theme';
 
 type ThemeContextType = {
   isDarkMode: boolean;
@@ -23,9 +21,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   useEffect(() => {
     const loadTheme = async () => {
       try {
-        const stored = await AsyncStorage.getItem(THEME_STORAGE_KEY);
-        if (stored !== null) {
-          setIsDarkMode(stored === 'dark');
+        const isAvailable = await SecureStore.isAvailableAsync();
+        if (isAvailable) {
+          const stored = await SecureStore.getItemAsync(THEME_STORAGE_KEY);
+          if (stored !== null) {
+            setIsDarkMode(stored === 'dark');
+          }
         }
       } catch {
         // Keep default dark mode
@@ -40,7 +41,10 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const newMode = !isDarkMode;
     setIsDarkMode(newMode);
     try {
-      await AsyncStorage.setItem(THEME_STORAGE_KEY, newMode ? 'dark' : 'light');
+      const isAvailable = await SecureStore.isAvailableAsync();
+      if (isAvailable) {
+        await SecureStore.setItemAsync(THEME_STORAGE_KEY, newMode ? 'dark' : 'light');
+      }
     } catch {
       // Ignore storage errors
     }
