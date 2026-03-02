@@ -112,14 +112,6 @@ export const SettingsScreen: React.FC = () => {
     Linking.openURL('https://play.google.com/store');
   };
 
-  const handlePrivacyPolicy = () => {
-    Linking.openURL('https://cheluretech.com/privacy');
-  };
-
-  const handleTerms = () => {
-    Linking.openURL('https://cheluretech.com/terms');
-  };
-
   return (
     <LinearGradient
       colors={[colors.background, colors.backgroundLight]}
@@ -176,26 +168,6 @@ export const SettingsScreen: React.FC = () => {
               label="Help Center"
               onPress={() => { }}
               iconColor={colors.info}
-              colors={colors}
-            />
-          </GradientCard>
-
-          <GradientCard style={styles.card} colors={colors}>
-            <Text style={[styles.sectionLabel, { color: colors.textMuted }]}>
-              Legal
-            </Text>
-            <SettingItem
-              icon="document-text-outline"
-              label="Privacy Policy"
-              onPress={handlePrivacyPolicy}
-              iconColor={colors.textSecondary}
-              colors={colors}
-            />
-            <SettingItem
-              icon="shield-outline"
-              label="Terms of Service"
-              onPress={handleTerms}
-              iconColor={colors.textSecondary}
               colors={colors}
             />
           </GradientCard>
