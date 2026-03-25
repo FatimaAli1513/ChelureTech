@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -9,11 +9,14 @@ import {
   Switch,
   Linking,
   Image,
+  Alert,
+  Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { GradientCard } from '../components';
 import { useTheme } from '../context/ThemeContext';
+import { useAppPreferences } from '../context';
 import { FONTS, SPACING, BORDER_RADIUS } from '../constants/theme';
 import type { ColorScheme } from '../constants/theme';
 
@@ -95,10 +98,12 @@ const ToggleItem: React.FC<ToggleItemProps> = ({
   );
 };
 
+const ANDROID_PACKAGE = 'com.cheluretech.netpulse';
+
 export const SettingsScreen: React.FC = () => {
   const { colors, isDarkMode, toggleTheme } = useTheme();
+  const { autoRefresh, setAutoRefresh } = useAppPreferences();
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const [autoRefresh, setAutoRefresh] = useState(true);
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
@@ -108,8 +113,31 @@ export const SettingsScreen: React.FC = () => {
     }).start();
   }, []);
 
-  const handleRateApp = () => {
-    Linking.openURL('https://play.google.com/store');
+  const handleRateApp = async () => {
+    const playStoreWeb = `https://play.google.com/store/apps/details?id=${ANDROID_PACKAGE}`;
+    const playStoreApp = `market://details?id=${ANDROID_PACKAGE}`;
+    if (Platform.OS === 'android') {
+      try {
+        if (await Linking.canOpenURL(playStoreApp)) {
+          await Linking.openURL(playStoreApp);
+          return;
+        }
+      } catch {
+        // fall through to web URL
+      }
+    }
+    await Linking.openURL(playStoreWeb);
+  };
+
+  const handleHelpCenter = () => {
+    Alert.alert(
+      'Help',
+      'Home shows your connection type and IP address. If you see 0.0.0.0, connect to Wi‑Fi or mobile data, then open Home and tap Refresh.\n\nUse Fix on Home for quick troubleshooting tips.',
+      [
+        { text: 'OK' },
+        { text: 'Open system settings', onPress: () => void Linking.openSettings() },
+      ]
+    );
   };
 
   return (
@@ -166,7 +194,7 @@ export const SettingsScreen: React.FC = () => {
             <SettingItem
               icon="help-circle-outline"
               label="Help Center"
-              onPress={() => { }}
+              onPress={handleHelpCenter}
               iconColor={colors.info}
               colors={colors}
             />

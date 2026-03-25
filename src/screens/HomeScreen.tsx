@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import {
   StyleSheet,
   View,
@@ -7,19 +7,18 @@ import {
   Image,
   Animated,
   TouchableOpacity,
-  Dimensions,
   Share,
   Alert,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import * as Clipboard from 'expo-clipboard';
 import * as Network from 'expo-network';
 import { GradientCard, StatusIndicator } from '../components';
 import { useTheme } from '../context/ThemeContext';
-import { FONTS, SPACING, BORDER_RADIUS } from '../constants/theme';
-
-const { width } = Dimensions.get('window');
+import { useAppPreferences } from '../context';
+import { FONTS, SPACING } from '../constants/theme';
 
 type NetworkState = {
   isConnected: boolean;
@@ -27,8 +26,22 @@ type NetworkState = {
   isInternetReachable: boolean;
 };
 
+const getConnectionTypeName = (type: string): string => {
+  const types: Record<string, string> = {
+    WIFI: 'WiFi',
+    CELLULAR: 'Mobile Data',
+    ETHERNET: 'Ethernet',
+    BLUETOOTH: 'Bluetooth',
+    VPN: 'VPN',
+    UNKNOWN: 'Unknown',
+    NONE: 'None',
+  };
+  return types[type] || type;
+};
+
 export const HomeScreen: React.FC = () => {
   const { colors } = useTheme();
+  const { autoRefresh } = useAppPreferences();
   const [networkState, setNetworkState] = useState<NetworkState>({
     isConnected: false,
     type: 'Unknown',
@@ -39,24 +52,7 @@ export const HomeScreen: React.FC = () => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
 
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 800,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 600,
-        useNativeDriver: true,
-      }),
-    ]).start();
-
-    fetchNetworkInfo();
-  }, []);
-
-  const fetchNetworkInfo = async () => {
+  const fetchNetworkInfo = useCallback(async () => {
     setIsRefreshing(true);
     try {
       const state = await Network.getNetworkStateAsync();
@@ -73,20 +69,31 @@ export const HomeScreen: React.FC = () => {
     } finally {
       setIsRefreshing(false);
     }
-  };
+  }, []);
 
-  const getConnectionTypeName = (type: string): string => {
-    const types: Record<string, string> = {
-      WIFI: 'WiFi',
-      CELLULAR: 'Mobile Data',
-      ETHERNET: 'Ethernet',
-      BLUETOOTH: 'Bluetooth',
-      VPN: 'VPN',
-      UNKNOWN: 'Unknown',
-      NONE: 'None',
-    };
-    return types[type] || type;
-  };
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!autoRefresh) {
+        return;
+      }
+      void fetchNetworkInfo();
+    }, [autoRefresh, fetchNetworkInfo])
+  );
 
   const handleShare = async () => {
     try {
