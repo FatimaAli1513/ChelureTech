@@ -2,7 +2,7 @@
   "expo": {
     "name": "ChelureTech",
     "slug": "ChelureTech",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -21,7 +21,7 @@
         "backgroundColor": "#0A0A1A"
       },
       "package": "com.cheluretech.netpulse",
-      "versionCode": 2,
+      "versionCode": 3,
       "permissions": [
         "android.permission.ACCESS_NETWORK_STATE",
         "android.permission.ACCESS_WIFI_STATE",
