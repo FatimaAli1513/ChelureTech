@@ -212,9 +212,7 @@ export const SettingsScreen: React.FC = () => {
             <Text style={[styles.aboutTagline, { color: colors.accent }]}>
               Global Network Solutions
             </Text>
-            <Text style={[styles.version, { color: colors.textMuted }]}>
-              Version 1.0.0
-            </Text>
+
           </GradientCard>
 
         </Animated.View>
