@@ -40,5 +40,5 @@ ChelureTech helps you quickly view your network and device information.
 
 **App Name:** ChelureTech  
 **Tagline:** Global Network Solutions  
-**Version:** 1.0.0 
+**Version:** 1.0.3  
 **Package:** com.cheluretech.netpulse
